@@ -9,14 +9,12 @@ use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
-    public function __invoke(Request $request)
+    public function login(Request $request)
     {
         // Set validation
         $validator = Validator::make($request->all(), [
             'username' => 'required',
-            'nama' => 'required',
-            'password' => 'required|min:5|confirmed',
-            'level_id' => 'required'
+            'password' => 'required',
         ]);
 
         // If validations fails
@@ -24,17 +22,22 @@ class LoginController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        // Create new user
-        $user = new UserModel();
-        $user->username = $request->username;
-        $user->nama = $request->nama;
-        $user->password = bcrypt($request->password);
-        $user->level_id = $request->level_id;
-        $user->save();
+        // get credentials from request
+        $credentials = $request->only('username', 'password');
 
+        // if auth failed
+        if(!$token = auth()->guard('api')->attempt($credentials)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Username atau Password Anda Salah'
+            ], 401);
+        }
+
+        // if auth success
         return response()->json([
-            'message' => 'User registered successfully',
-            'user' => $user
-        ], 201);
+            'success' => true,
+            'user' => auth()->guard('api')->user(),
+            'token' => $token
+        ], 200);
     }
 }
