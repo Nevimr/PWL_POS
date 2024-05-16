@@ -8,7 +8,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class LogoutController extends Controller
 {
-    public function __invoke(Request $request)
+    public function logout(Request $request)
     {
         //remove token
         $removeToken = JWTAuth::invalidate(JWTAuth::getToken());
