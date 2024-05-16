@@ -9,13 +9,13 @@ use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
-    public function __invoke(Request $request)
+    public function register(Request $request)
     {
         //set validation
         $validator = Validator::make($request->all(), [
             'username' => 'required',
             'nama' => 'required',
-            'password' => 'required|min:5|confirmed',
+            'password' => 'required|min:5',
             'level_id' => 'required'
         ]);
 
