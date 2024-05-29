@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
+Route::post('/register1', [RegisterController::class, 'register1'])->name('register1');
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
 

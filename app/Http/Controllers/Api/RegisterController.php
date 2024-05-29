@@ -9,27 +9,31 @@ use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
-    public function register(Request $request)
+    public function register1(Request $request)
     {
         //set validation
         $validator = Validator::make($request->all(), [
             'username' => 'required',
             'nama' => 'required',
             'password' => 'required|min:5',
-            'level_id' => 'required'
+            'level_id' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         //if validations fails
         if($validator->fails()){
             return response()->json($validator->error(), 422);
         }
-
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+        }
         //create user
         $user = UserModel::create([
             'username' => $request->username,
             'nama' => $request->nama,
             'password' => bcrypt($request->password),
             'level_id' => $request->level_id,
+            'image' => $image->hashName(),
         ]);
 
         //return response JSON user is created
